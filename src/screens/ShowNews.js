@@ -10,8 +10,8 @@ const ShowNews = () => {
     const getNewsData = async () => {
       try {
         const response = await AuthService.createNews('infoNews');
-        //console.log("resData is ::",response.data);
-        setArticles(response?.data);
+        console.log("resData is ::",response?.data);
+        setArticles(response?.data || []);
       } catch (error) {
         console.log("error is::", error);
         
@@ -19,14 +19,16 @@ const ShowNews = () => {
     }
     getNewsData();
   }, []);
-  //console.log("articles is ::" ,articles);
+  console.log("articles is ::" ,articles);
   
-  const renderItem = ({ item }) => (
-    <View >
-      <Text >{item.title}</Text>
-      <Text >{item.description}</Text>
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    return (
+      <View>
+        <Text>{item.title}</Text>
+      </View>
+    );
+  };
+  
 
   return (
     <View>
@@ -34,7 +36,7 @@ const ShowNews = () => {
 
       <FlatList
         data={articles}
-        keyExtractor={(item) => item.title }
+        keyExtractor={(item) => item.title}
         renderItem={renderItem}
       />
     
@@ -43,9 +45,9 @@ const ShowNews = () => {
 }
 
 
-
 const styles = StyleSheet.create({
 
 });
 
 export default ShowNews;
+
