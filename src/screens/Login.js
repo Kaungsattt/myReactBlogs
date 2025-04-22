@@ -2,20 +2,38 @@ import { View, Text, TextInput, StyleSheet,Alert,TouchableOpacity } from 'react-
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const Login = ({navigation,route}) => {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  //useEffect(() => {
-  //  setName(route?.params?.name)
-  //  setEmail(route?.params?.email)
-  //},)
-
-  //{toRegPage}
+  useEffect(() => {
+    setName(route?.params?.name)
+    setEmail(route?.params?.email)
+  },)
 
   //{submitBtn}
-  const handleLogin = async() => {
+  const handleLogin = async () => {
+    try {
+      const getUser = await AsyncStorage.getItem('userInfo');
+      //console.log("getUserinfo is ::",getUser);
+    
+      if (getUser) {
+        const dataUser = JSON.parse(getUser);
+        if (dataUser.email === email && dataUser.password === password) {
+          Alert.alert('Success', 'Login successful!');
+          // Pass the user data to the Home screen
+          navigation.navigate('Home', { name, email });
+          return;
+        }
+      }
+      Alert.alert('Error', 'Invalid email or password')
+    } catch (error) {
+      Alert.alert('Error', 'Could not log in');
+    }
+
     if (!name || !email) {
       Alert.alert("Need to fill require fields");
     }
@@ -39,6 +57,15 @@ const Login = ({navigation,route}) => {
         placeholder='Enter your Name'
         onChangeText={(text) => setEmail(text)}
       />
+      <TextInput
+            style={styles.input}
+            placeholder='Enter your Password here ....'
+            placeholderTextColor="green"
+            value={password}
+            onChangeText={setPassword}
+      />
+      
+          
 
       <View style={{ alignItems: 'center', marginTop: 20 }}>
         <Text>Don't have an account?</Text>
@@ -60,7 +87,7 @@ const Login = ({navigation,route}) => {
 
 export default Login
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -73,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333', // Inline style example
+    color: '#333', 
   },
   image: {
       width: 100,

@@ -1,26 +1,33 @@
 import { View, Text,StyleSheet,Button } from 'react-native'
 import React, { useState } from 'react'
+import EditProfile from './EditProfile';
 
-const Home = ({ navigation }) => {
-  const [user, setUser] = useState('');
-
+const Home = ({ navigation, route }) => {
+  
+  const name = route?.params?.name;
+  //const email = route.params.email;
   
   return (
     <View style={styles.container}>
-      <Button style={styles.profileBtn}
-        title="Edit Profile"
-        onPress={() => navigation.navigate('EditProfile')} />
+      {/*<View style={styles.buttonContainer}>
+        <Button
+          title={EditProfile}
+          onPress={() => navigation.navigate('EditProfile')}
+        />
+      </View>*/}
+
+      <View style={styles.buttonContainer}>
+        <Button
+          title='showNews'
+          onPress={()=> navigation.navigate('ShowNews')}
+        />
+      </View>
       <Text>Home</Text>
-
-      
-
-    </View>
-
-    
+    </View>    
   )
 }
 
-export default Home
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
@@ -31,9 +38,9 @@ const styles = StyleSheet.create({
     backgroundColor : 'rgba(0, 0, 0, 0.6)'
   },
 
-  profileBtn: {
+  buttonContainer: {
     position: 'absolute',
-    top: 10,
+    top: 40,
     right: 10,
     zIndex: 1,
   }

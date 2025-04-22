@@ -98,7 +98,7 @@ const Register = ({navigation}) => {
 
 export default Register
 
-  const styles = StyleSheet.create({
+  export const styles = StyleSheet.create({
 
     container: {
       flex: 1,
@@ -110,7 +110,7 @@ export default Register
     viewContainer: {
       width: '85%',
       padding: 30,
-      backgroundColor: 'rgba(255, 255, 255, 0.1)', // translucent box background
+      backgroundColor: 'rgba(255, 255, 255, 0.1)', 
       alignItems: "center",
       borderRadius: 10,
     },
