@@ -89,7 +89,7 @@ const Register = ({navigation}) => {
             style={styles.btn}
             onPress={handleRegister}
           >
-            <Text style={styles.btnText}>Login</Text>
+            <Text style={styles.btnText}>Register</Text>
           </TouchableOpacity>
         </View>
     </View>

@@ -48,13 +48,15 @@ const Login = ({navigation,route}) => {
         style={styles.input}
         value={name}
         placeholder='Enter your Name'
+        placeholderTextColor="green"
         onChangeText={(text) => setName(text)}
       />
 
       <TextInput
         style={styles.input}
         value={email}
-        placeholder='Enter your Name'
+        placeholder='Enter your Email'
+        placeholderTextColor="green"
         onChangeText={(text) => setEmail(text)}
       />
       <TextInput
