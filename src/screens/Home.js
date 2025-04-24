@@ -1,9 +1,15 @@
 import { View, Text,StyleSheet,Button } from 'react-native'
 import React, { useState } from 'react'
 import EditProfile from './EditProfile';
+import { useDispatch, useSelector } from 'react-redux';
+import { getData } from '../store/dataSlice';
 
 const Home = ({ navigation, route }) => {
-  
+
+  /* dataslice */ 
+  const dispatch = useDispatch();
+  const newsData = useSelector(getData);
+  /* */ 
   const name = route?.params?.name;
   //const email = route.params.email;
   

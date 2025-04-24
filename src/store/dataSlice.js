@@ -10,15 +10,19 @@ export const dataSlice = createSlice({
   reducers: {
     setData: (state, action) => {
       //console.log("state is::", state);
-      
       state.data.push(action.payload);
-      //console.log("action is ::", action);
-        
+      //console.log("action is ::", action);       
     },
+
+    editData: (state, action) => {
+      
+      
+    }
+
   },
 });
 
-export const { setData } = dataSlice.actions;
+export const { setData,editData } = dataSlice.actions;
 
 export const getData = (state) => state.data.data;
 

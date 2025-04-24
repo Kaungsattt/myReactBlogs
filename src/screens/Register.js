@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,TextInput ,TouchableOpacity, Alert} from 'react-native';
+import { View, Text,StyleSheet,TextInput ,TouchableOpacity, Alert, ImageBackground} from 'react-native';
 import { useState } from 'react';
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -39,6 +39,11 @@ const Register = ({navigation}) => {
   return (
     <View style={styles.container}>
       
+      <ImageBackground
+        style={styles.ImageBackground}
+        source={require("../../image/images (3).jpg")}
+        resizeMode='cover'
+      >
         {/*{FormLogin}*/}
         <View style={styles.viewContainer}>
           <Text style={styles.header}> Form Login </Text>
@@ -92,6 +97,7 @@ const Register = ({navigation}) => {
             <Text style={styles.btnText}>Register</Text>
           </TouchableOpacity>
         </View>
+      </ImageBackground>
     </View>
   )
 }
@@ -104,7 +110,12 @@ export default Register
       flex: 1,
       justifyContent: "center",
       alignItems: "center",    
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      //backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      backgroundColor : "white"
+    },
+
+    ImageBackground: {
+      //flex: 1,
     },
 
     viewContainer: {
@@ -117,14 +128,14 @@ export default Register
   
     header: {
       fontSize: 24,
-      color: '#fff',
+      color: '#b22222',
       textAlign: 'center',
       marginBottom: 20,
     },
   
     label: {
       fontSize: 16,
-      color: '#fff',
+      color: '#f0fff0',
       marginBottom: 5,
     },
   
@@ -139,11 +150,11 @@ export default Register
     },
   
     btn: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
-      padding: 10,
-      width: '100%',
-      borderRadius: 5,
+      backgroundColor: '#006400',
+      paddingVertical: 15,
+      paddingHorizontal: 40,
+      borderRadius: 8,
+      marginTop: 10,
     },
   
     btnText: {
