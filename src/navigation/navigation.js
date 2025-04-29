@@ -5,6 +5,8 @@ import Register from '../screens/Register';
 import Home from '../screens/Home'
 import EditProfile from '../screens/EditProfile';
 import ShowNews from '../screens/ShowNews';
+import DetailsPage from '../screens/DetailsPage';
+
 
 const Stack = createNativeStackNavigator();   
 const ScreenNavigator = () => { 
@@ -15,6 +17,8 @@ const ScreenNavigator = () => {
                 <Stack.Screen name="Home" component={Home}></Stack.Screen>
                 <Stack.Screen name="EditProfile" component={EditProfile}></Stack.Screen>
                 <Stack.Screen name="ShowNews" component={ShowNews}></Stack.Screen>
+                <Stack.Screen name="DetailsPage" component={DetailsPage}></Stack.Screen>
+           
             </Stack.Navigator>
         )
 }

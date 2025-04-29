@@ -16,7 +16,6 @@ export const dataSlice = createSlice({
 
     editData: (state, action) => {
       
-      
     }
 
   },

@@ -28,7 +28,7 @@ const Home = ({ navigation, route }) => {
           onPress={()=> navigation.navigate('ShowNews')}
         />
       </View>
-      <Text>Home</Text>
+      <Text>Home Page</Text>
     </View>    
   )
 }
