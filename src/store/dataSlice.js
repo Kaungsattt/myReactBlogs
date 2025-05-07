@@ -21,7 +21,7 @@ export const dataSlice = createSlice({
   },
 });
 
-export const { setData,editData } = dataSlice.actions;
+export const { setData } = dataSlice.actions;
 
 export const getData = (state) => state.data.data;
 

@@ -2,6 +2,7 @@ import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, ImageBackgr
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const Login = ({ navigation, route }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -45,6 +46,7 @@ const Login = ({ navigation, route }) => {
           <Text style={styles.title}>ReactBlogs!</Text>
           <TextInput
             style={styles.input}
+            
             value={email}
             placeholder="Enter your Email"
             placeholderTextColor="gray"

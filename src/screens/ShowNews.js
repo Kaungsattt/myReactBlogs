@@ -1,44 +1,71 @@
 import { View, Text, StyleSheet, FlatList,TouchableOpacity } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AuthService from '../services/authService';
 import { getData, setData } from '../store/dataSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
-const ShowNews = ({navigation}) => {
+const ShowNews = ({ navigation }) => {
+  const [item, setItem] = useState([]);
   const dispatch = useDispatch();
   const articles = useSelector(getData);
 
   useEffect(() => {
-    const fetchNewsData = async () => {
-      try {
-        const response = await AuthService.createNews('infoNews');
-        const newsArticles = response?.data?.articles || [];
-        // dispatch the list Dta
-        dispatch(setData(newsArticles));
-      } catch (error) {
-        console.log('Error fetching news:', error);
-      }
-    };
-
-    fetchNewsData();
+    newsByCategory();
+    //fetchNewsData();
   }, [dispatch]);
+
+  //const fetchNewsData = async () => {
+  //  try {
+  //    const response = await AuthService.createNews('query');
+  //    const newsArticles = response.data.articles || [];
+  //    //console.log("new articles are::" , newsArticles);
+  //    // dispatch the list Dta
+  //    dispatch(setData(newsArticles));
+  //    //console.log("setData is::" ,setData(newsArticles));
+  //    
+  //  } catch (error) {
+  //    console.log('Error fetching news:', error);
+  //  }
+  //};
+
+  const newsByCategory = async () => {
+
+    const response = await AuthService.newsByCategory("sports");
+    //console.log("newsByCategory articles ::", response?.data?.articles);
+    setItem(response.data?.articles)
+  
+  }
 
   //to Details Page
   const handleDetailsPress = (item) => {
     navigation.navigate('DetailsPage', {item})
   }
 
-  const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.title}>{item.title}</Text>
-      <Text>{item.description}</Text>
+  console.log("set item is", item);
+  
 
+  const renderItem = ({ item }) => (
+    
+    <View style={styles.itemContainer}>
+      
+      <Text style={styles.title}>{item?.content}</Text>
+      <Text style={styles.title}>{item?.description}</Text>
+      <Text style={styles.title}>{item.title}</Text>
+  
+      <View>
       <TouchableOpacity
         style={styles.btn}
         onPress={() => handleDetailsPress(item)}
       >
         <Text style={styles.btnText}>Details</Text>
       </TouchableOpacity>
+      {/*<TouchableOpacity
+        style={styles.btn}
+        onPress={() => handleDetailsPress(item)}
+      >
+        <Text style={styles.btnText}>Delete</Text>
+      </TouchableOpacity>*/}
+      </View>
     </View>
   );
 
@@ -46,11 +73,14 @@ const ShowNews = ({navigation}) => {
     <View style={styles.container}>
       <Text style={styles.header}>Latest News</Text>
       <FlatList
-        data={articles}
-        keyExtractor={(item, index) => index.toString()}
+        data={item}
+        keyExtractor={( item ,index) => item.index } 
         renderItem={renderItem}
       />
-    </View>
+
+      
+
+      </View>
   );
 };
 
@@ -72,6 +102,10 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
+  },
+
+  noData: {
+    
   },
   title: {
     fontSize: 18,
