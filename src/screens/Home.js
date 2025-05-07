@@ -6,96 +6,58 @@ import { SafeAreaView ,ScrollView} from 'react-native';
 import AuthService from '../services/authService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
-
-
 const Home = ({ navigation }) => {
-
-  const [item, setItem] = useState([]);
-  const dispatch = useDispatch();
-  const articles = useSelector(getData);
-  const myIcon = <Icon name="rocket" size={30} color="#900" />;
-
-  useEffect(() => { 
-
-    fetchData();
-
-  },[dispatch]);
-
-  const fetchData = async () => {
-    try {
-      const response = await AuthService.newsByCategory("sports");
-      const responseData = response?.data?.articles;
-      setItem(responseData);
-      
-    } catch (error) {
-      console.log("Error is::" , error);
-    }
-  }
-
-  //flat list render item 
-  const renderItem = ({ item }) => 
-     (
-    <View> 
-      <Text style={styles.cardTitle}>{item?.title}</Text>
-      <View style={styles.cardbody} >
-      <Image
-        source = {{uri: item?.image}}
-        resizemode = "contain"
-        style = {styles.Image}
-
-        />
-      {/*card body && Icon*/}
-      <View style={styles.cardRow}>
-          <View style={styles.cardRowItem}>
-            
-            <Icon name="youtube"
-              size={20} color="#dc143c" />
-            
-            
-            <Icon name="info"
-              size={20} color="#173153"
-              
-            />
-          </View>
-      </View>
-      </View>
-    </View>
-    )
-    //showDetails 
-    const handleDetailsPress = (item) => {
-      navigation.navigate('DetailsPage', item)
-    }
-
-
+  const toPage = (category) => {
+    console.log("updateitem::" , category);
+    navigation.navigate('commonInfoPage',{ category });
+  } 
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Home Page</Text>
-  
+      <View contentContainerStyle={styles.container}>
+        <Text style={styles.title}>
+        <Icon
+          name="home"
+            size={30} color="black" 
+            style={styles.icon} />
+          Home Page</Text>
         {/*card */}
-        <View style= {styles.card}>
-          <TouchableOpacity
-            title='showNews'
-            onPress={handleDetailsPress}
-          >
-            <FlatList
-              data={item}
-              keyExtractor={( item ,index) => item.index } 
-              renderItem={renderItem}
-              
-            />
-          
-          </TouchableOpacity>
-        </View>
-        {/*{<View style={styles.buttonContainer}>
-        <Button
-          title='showNews'
-          onPress={()=> navigation.navigate('ShowNews')}
-        />
-        </View>}*/}
+        <TouchableOpacity
+          onPress={toPage("business")}
+        >
+          <Text>Business</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={toPage("health")}
+        >
+          <Text>Health</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={toPage("entertainment")}
+        >
+          <Text>Entertainment</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={toPage("nation")}
+        >
+          <Text>Nation</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={toPage("science")}
+        >
+          <Text>Science</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={toPage("technology")}
+        >
+          <Text>Technology</Text>
+        </TouchableOpacity>
 
-      </ScrollView>
+        <TouchableOpacity
+          onPress={toPage("world")}
+        >
+          <Text>World</Text>
+        </TouchableOpacity>  
+      </View>
     </SafeAreaView>
 
   )
@@ -112,7 +74,14 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "700",
     color: "#1d1d1d",
-    marginBottom : 12
+    marginBottom: 12,
+    textAlign: "center",
+    marginVertical : 20,
+  },
+
+  icon: {
+    marginHorizontal: 10,
+    
   },
 
   Image: {
@@ -140,17 +109,18 @@ const styles = StyleSheet.create({
 
   cardRow: {
     flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal : 15,
+    marginHorizontal: 15,
+    justifyContent: "space-evenly",
+    alignItems : "center"
     
   },
 
   cardRowItem: {
     flexDirection: "row",
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     marginTop : 15,
-    justifyContent: "space-between",
-    alignItems : "center"
+    justifyContent: 'space-between',
+    alignItems : "center",
   }
   
 })

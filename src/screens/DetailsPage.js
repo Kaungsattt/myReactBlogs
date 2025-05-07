@@ -5,8 +5,8 @@ import AuthService from '../services/authService';
 import { getData, setData } from '../store/dataSlice';
 
 const DetailsPage = ({ route, navigation }) => {
-  //const showItem = route;
-  //console.log("item::" , showItem);
+  const showItem = route?.params?.item.title;
+  console.log("show Item::" , showItem);
 
   const [item, setItem] = useState([]);
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ const DetailsPage = ({ route, navigation }) => {
   const fetchData = async () => {
     try {
       const response = await AuthService.newsByCategory("sports");
-      console.log("detailsRespo:" , response?.data?.articles);
+      //console.log("detailsRespo:" , response?.data?.articles.title);
       
       const responseData = response?.data?.articles;
       setItem(responseData);
@@ -44,7 +44,7 @@ const DetailsPage = ({ route, navigation }) => {
       <Text style={styles.header}>News Details</Text>
       <Text
       >
-        {item?.title}
+        this is test 
       </Text>
       <Image
         source={{ uri: item?.image  }} 

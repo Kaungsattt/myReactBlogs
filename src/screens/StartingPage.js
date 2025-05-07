@@ -142,10 +142,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     textTransform: 'uppercase',
     top: CIRCLE_SIZE / 2 - 20 / 2,
-    fontSize: 15,
+    fontSize: 20,
     lineHeight: 20,
-    fontWeight: '700',
-    color: '#fff',
+    fontWeight: '900',
+    color: '#006400',
   },
 
 })
