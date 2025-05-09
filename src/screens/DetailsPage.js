@@ -1,113 +1,158 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
-import { useDispatch,useSelector } from 'react-redux';
-import AuthService from '../services/authService';
-import { getData, setData } from '../store/dataSlice';
+import React from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { useState } from 'react';
 
 const DetailsPage = ({ route, navigation }) => {
-  const showItem = route?.params?.item.title;
-  console.log("show Item::" , showItem);
+  const {item} = route.params; 
+  const [loading, setLoading] = useState(false);
 
-  const [item, setItem] = useState([]);
-  const dispatch = useDispatch();
-  const articles = useSelector(getData);
-  
-  //fetching Data 
-  useEffect(() => {
-    
-    fetchData();
-  }, [dispatch])
-  
-  const fetchData = async () => {
-    try {
-      const response = await AuthService.newsByCategory("sports");
-      //console.log("detailsRespo:" , response?.data?.articles.title);
-      
-      const responseData = response?.data?.articles;
-      setItem(responseData);
-      
-    } catch (error) {
-      console.log("Error is::" , error);
-    }
+  if (!item) {
+    return (
+      <View style={[styles.container, styles.center]}>
+        <Text style={styles.errorText}>No article data available</Text>
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.buttonText}>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
-  //render Item
-  //const renderItem = ({item}) => 
-  //   (
-  //    <View style={styles.card}>
-  //      <Text>{ item.content}</Text>
-  //    </View>
-  //  )
-  
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>News Details</Text>
-      <Text
-      >
-        this is test 
-      </Text>
-      <Image
-        source={{ uri: item?.image  }} 
-        style={styles.image}
-        resizeMode="cover"
-      />
-      
-      {item.map(({ title, description }, index) => {
+    <ScrollView contentContainerStyle={styles.container}>
+      {item.image && (
+        <Image
+          source={{ uri: item.image }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      )}
+
+      <Text style={styles.title}>{item.title}</Text>
+
+      <View style={styles.metaContainer}>
+        {item.author && (
+          <View style={styles.metaItem}>
+            <Icon name="user" size={16} color="#666" />
+            <Text style={styles.metaText}>{item.author}</Text>
+          </View>
+        )}
         
-      } )}
+        {item.publishedAt && (
+          <View style={styles.metaItem}>
+            <Icon name="calendar" size={16} color="#666" />
+            <Text style={styles.metaText}>
+              {new Date(item.publishedAt).toLocaleDateString()}
+            </Text>
+          </View>
+        )}
+        
+        {item.source?.name && (
+          <View style={styles.metaItem}>
+            <Icon name="newspaper-o" size={16} color="#666" />
+            <Text style={styles.metaText}>{item.source.name}</Text>
+          </View>
+        )}
+      </View>
 
-      {/*<FlatList
-        data={articles}
-        renderItem={renderItem}
-        keyExtractor={(item,index) => {item.index}}
-      />
-      <Text style={styles.title}>{item.title}</Text>*/}
+      <Text style={styles.description}>{item.description}</Text>
+      
+      {item.content && (
+        <Text style={styles.content}>{item.content.replace(/\[\+\d+ chars\]/g, '')}</Text>
+      )}
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-        <Text style={styles.buttonText}>Back to Home</Text>
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.buttonText}>
+          <Icon name="arrow-left" size={16} /> Back to News
+        </Text>
       </TouchableOpacity>
-    </View>
+
+      {loading && (
+        <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+      )}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
-    backgroundColor: '#121212',
-    alignItems: 'center',
+    backgroundColor: '#fff',
+    marginTop : 20,
   },
-  header: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#f1f1f1',
-    marginBottom: 15,
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
     width: '100%',
-    height: 200,
-    borderRadius: 12,
-    marginBottom: 15,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#deb887',
-    textAlign: 'center',
+    height: 250,
+    borderRadius: 8,
     marginBottom: 20,
   },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 15,
+    lineHeight: 30,
+  },
+  metaContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 20,
+    gap: 15,
+  },
+  metaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  metaText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  description: {
+    fontSize: 18,
+    color: '#444',
+    marginBottom: 20,
+    lineHeight: 26,
+  },
+  content: {
+    fontSize: 16,
+    color: '#555',
+    lineHeight: 24,
+    marginBottom: 30,
+  },
   button: {
-    backgroundColor: '#006400',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    backgroundColor: '#1e88e5',
+    padding: 15,
     borderRadius: 8,
-    marginTop: 20,
+    alignItems: 'center',
+    marginVertical: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 10,
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: '600',
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'red',
+    marginBottom: 20,
+  },
+  loader: {
+    marginVertical: 20,
   },
 });
 

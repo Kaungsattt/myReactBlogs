@@ -2,7 +2,6 @@ import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity,Dimension
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import React from 'react'
 
-
 const { width } = Dimensions.get('window');
 const CIRCLE_SIZE = width / 2;
 
@@ -11,31 +10,38 @@ const StartingPage = ({navigation}) => {
 
   const items = [
     {
-      img: require('../../image/dailynews.png'),
+      img: require('../../image/dailyoneNews.jpg'),
       text: 'Daily',
       position: [0, 0],
     },
     {
-      img: require('../../image/football.jpg'),
+      img: require('../../image/footballOne.jpg'),
       text: 'Football',
       position: [120, 120],
     },
     {
-      img: require('../../image/crmie.jpg'),
+      img: require('../../image/crimeOne.jpg'),
       text: 'Crime',
       position: [240, 0],
     },
     {
-      img: require('../../image/download.jpg'),
-      text: 'Mountains',
+      img: require('../../image/policticalOne.jpg'),
+      text: 'Politics',
       position: [360, 120],
     },
   ];
   return (
     <SafeAreaView style = {styles.container}>
       <View style = {styles.content}>
-        <Text style ={styles.title}>StartingPage</Text>
-        <Text style ={styles.subtitle}>"A journey of a thousand miles begins with a single step."  "It's not the destination, it's the journey."</Text>
+        <Text style ={styles.title}>New Blogs</Text>
+        <View style={styles.quoteContainer}>
+          <Text style={styles.modernSubtitle}>
+            "Journalism without a moral position is impossible."
+          </Text>
+          <Text style={styles.modernSubtitle}>
+            "It's not the destination, it's the journey."
+          </Text>
+        </View>
       </View>
 
       <View style={styles.circles}>
@@ -84,18 +90,24 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    fontWeight: 300,
-    color: "#3d3d3d",
+    fontWeight: "800",
+    color: '#1a1a1a',
     textAlign: "center",
-    marginBottom : 16,
+    marginVertical: 20,
+    letterSpacing : 2,
   },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "400", 
-    lineHeight: 20,
-    textAlign: "center",
-    color: "#1a377f",
-    marginBottom :8 , 
+  quoteContainer: {
+    borderLeftWidth: 3,
+    borderLeftColor: '#ff4757',
+    paddingLeft: 16,
+  },
+
+  modernSubtitle: {
+    fontSize: 16,
+    color: '#666',
+    fontStyle: 'italic',
+    lineHeight: 22,
+    marginBottom: 8,
   },
 
   circles: {
@@ -145,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 20,
     fontWeight: '900',
-    color: '#006400',
+    color: '#dc143c',
   },
 
 })

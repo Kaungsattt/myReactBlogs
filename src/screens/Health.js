@@ -6,9 +6,6 @@ import { SafeAreaView ,ScrollView} from 'react-native';
 import AuthService from '../services/authService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
-
-
 const Home = ({ navigation }) => {
 
   const [item, setItem] = useState([]);

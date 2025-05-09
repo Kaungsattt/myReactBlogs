@@ -33,7 +33,7 @@ const Home = ({ navigation }) => {
   }
   //showDetails 
   const handleDetailsPress = (item) => {
-    console.log("handlebeforepress::" , {item});
+    //console.log("handlebeforepress::" , {item});
     navigation.navigate('DetailsPage', { item });
   }
   //flat list render item 

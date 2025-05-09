@@ -1,161 +1,209 @@
-import { View, Text, StyleSheet, Button,TouchableOpacity,Image, FlatList } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Image, FlatList, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getData } from '../store/dataSlice';
-import { SafeAreaView ,ScrollView} from 'react-native';
-import AuthService from '../services/authService';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AuthService from '../services/authService';
 
-
-
-
-const commonInfoPage = ({ navigation,route }) => {
-  console.log("route name ::" , route);
-  const category = route;
-  console.log("category is ::" ,category);
-  
-  const [item, setItem] = useState([]);
+const CommonInfoPage = ({ navigation, route }) => {
+  const  category  = route.params;
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const articles = useSelector(getData);
 
   useEffect(() => { 
     fetchData();
-  },[dispatch]);
+  }, [category]);
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const response = await AuthService.newsByCategory(category);
       const responseData = response?.data?.articles;
-      setItem(responseData);
-      
+      //console.log("respo Datais ;;" , responseData);
+      setItems(responseData);
     } catch (error) {
-      console.log("Error is::" , error);
+      console.log("Error fetching data:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
-  }
-  //showDetails 
+  };
+
   const handleDetailsPress = (item) => {
-    //console.log("handlebeforepress::" , {item});
     navigation.navigate('DetailsPage', { item });
-  }
-  //flat list render item 
-  const renderItem = ({ item }) => 
-     (
+  };
+
+  const renderItem = ({ item }) => (
     <TouchableOpacity
-      onPress={handleDetailsPress(item)}
+      style={styles.card}
+      onPress={() => handleDetailsPress(item)}
     >
-      <View> 
-      <Text style={styles.cardTitle}>
-        {item?.title}
-      </Text>
-      <View style={styles.cardbody} >
-      <Image
-        source = {{uri: item?.image}}
-        resizemode = "contain"
-        style = {styles.Image}
-        />
-      {/*card body && Icon*/}
-      <View style={styles.cardRow}>
-          <View style={styles.cardRowItem}>
-            <TouchableOpacity><Icon name="youtube"
-              size={20} color="#dc143c" />
+      <View style={styles.cardContent}>
+        <Text style={styles.cardTitle}>
+          {item?.title}
+        </Text>
+        {item?.image && (
+          <Image
+            source={{ uri: item.image }}
+            resizeMode="cover"
+            style={styles.image}
+          />
+        )}
+        <View style={styles.cardFooter}>
+          <View style={styles.iconContainer}>
+            <TouchableOpacity style={styles.iconButton}>
+              <Icon name="youtube" size={20} color="#dc143c" />
             </TouchableOpacity>
-            <TouchableOpacity><Icon name="info"
-              size={20} color="#173153" />
+            <TouchableOpacity style={styles.iconButton}>
+              <Icon name="info" size={20} color="#173153" />
             </TouchableOpacity>
           </View>
-      </View>
-      </View>
-    </View>
-    </TouchableOpacity>
-    )
-  return (
-    <SafeAreaView>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>
-        <Icon
-          name="home"
-            size={30} color="black" 
-            style={styles.icon} />
-          Home Page</Text>
-        {/*card */}
-        <View style= {styles.card}>
-            <FlatList
-              data={item}
-              keyExtractor={( item ,index) => item.index } 
-              renderItem={renderItem}
-            />
         </View>
-        {/*{<View style={styles.buttonContainer}>
-        <Button
-          title='showNews'
-          onPress={()=> navigation.navigate('ShowNews')}
-        />
-        </View>}*/}
+      </View>
+    </TouchableOpacity>
+  );
 
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={styles.errorContainer}>
+        <Text style={styles.errorText}>Error: {error}</Text>
+        <TouchableOpacity onPress={fetchData} style={styles.retryButton}>
+          <Text style={styles.retryButtonText}>Retry</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Icon name="newspaper-o" size={30} color="#000" style={styles.icon} />
+          {/*<Text style={styles.title}>{category.charAt(0).toUpperCase() + category.slice(1)} News</Text>*/}
+        </View>
+        
+        <FlatList
+          data={items}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={renderItem}
+          scrollEnabled={false}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No articles found</Text>
+            </View>
+          }
+        />
       </ScrollView>
     </SafeAreaView>
-
-  )
-}
-export default commonInfoPage;
+  );
+};
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
-    padding: 25,
-    marginBottom : 50,
+    padding: 16,
   },
-
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 5,
+  },
+  retryButtonText: {
+    color: 'white',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    textAlign : "center",
+  },
   title: {
-    fontSize: 30,
-    fontWeight: "700",
-    color: "#1d1d1d",
-    marginBottom: 12,
-    textAlign: "center",
-    marginVertical : 20,
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1d1d1d',
+    marginLeft: 10,
+    textAlign : "center"
   },
-
   icon: {
-    marginHorizontal: 10,
-    
+    marginRight: 10,
   },
-
-  Image: {
-    width: "100%",
-    height: 200,
-    borderRadius : 20,
-  },
-
   card: {
-    borderBottomWidth: 1,
+    backgroundColor: '#fff',
+    borderRadius: 10,
     marginBottom: 16,
-    borderColor: "#e3e3e3",
-   
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    overflow: 'hidden',
   },
-
+  cardContent: {
+    padding: 16,
+  },
   cardTitle: {
-    fontWeight: "700",
-    fontSize: 21,
-    lineHeight : 24,
+    fontWeight: '700',
+    fontSize: 18,
+    lineHeight: 24,
+    marginBottom: 12,
+    color: '#333',
   },
-
-  cardbody: {
-    paddingVertical : 16,
+  image: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 12,
   },
-
-  cardRow: {
-    flexDirection: "row",
-    marginHorizontal: 15,
-    justifyContent: "space-evenly",
-    alignItems : "center"
-    
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
+  iconContainer: {
+    flexDirection: 'row',
+  },
+  iconButton: {
+    marginLeft: 15,
+    padding: 5,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+  },
+});
 
-  cardRowItem: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    marginTop : 15,
-    justifyContent: 'space-between',
-    alignItems : "center",
-  }
-  
-})
+export default CommonInfoPage;
